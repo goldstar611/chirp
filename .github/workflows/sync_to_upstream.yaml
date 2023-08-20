@@ -1,0 +1,37 @@
+name: Synchronize Fork
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  # Allows Dan to trigger synchronization,
+  # which then triggers snaps to build
+  repository_dispatch:
+    types: dan-says-build
+
+jobs:
+  sync:
+    environment: PAT_TOKEN
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
+      - name: Merge kk7ds
+        run: |
+          git config --global user.name 'Tony Fuller'
+          git config --global user.email 'goldstar611@hotmail.com'
+          git remote add kk7ds https://github.com/kk7ds/chirp.git
+          git fetch kk7ds
+          # Rebase instead of merge so we don't accumulate extraneous merge commits
+          git rebase kk7ds/master
+          # Force push because we're continuously re-writing the history
+          git push -f origin master
+      - name: Kick off AppImage Builds
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          curl -H "Accept: application/vnd.github.everest-preview+json" \
+              -H "Authorization: token $GITHUB_TOKEN"                   \
+              --request POST                                            \
+              --data '{"event_type": "dan-says-build"}'                 \
+              https://api.github.com/repos/goldstar611/chirp-appimage/dispatches
