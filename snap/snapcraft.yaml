@@ -47,11 +47,9 @@ parts:
       ver_without_next=${ver_with_next//next-/}
       curl -H "User-Agent: goldstar611" -o ${SNAPCRAFT_PART_SRC}/chirp-${ver_without_next}-py3-none-any.whl https://archive.chirpmyradio.com/chirp_next/${ver_with_next}/chirp-${ver_without_next}-py3-none-any.whl
       pip install --no-input ${SNAPCRAFT_PART_SRC}/chirp-${ver_without_next}-py3-none-any.whl
-      # Fix icon
-      sed -i 's,Icon=chirp,Icon=${SNAP}/lib/python3.10/site-packages/chirp/share/chirp.svg,g' ${SNAPCRAFT_PART_SRC}/chirp/share/chirp.desktop
       # snap version cannot be longer than 32 characters
-      TARBALL_SHA_SHORT=$(sha1sum ${SNAPCRAFT_PART_SRC}/chirp-src.tar.gz | head -c 8)
-      SNAP_VERSION="snap-$(date +%Y%m%d)+${TARBALL_SHA_SHORT}"
+      WHEEL_SHA_SHORT=$(sha1sum ${SNAPCRAFT_PART_SRC}/chirp-${ver_without_next}-py3-none-any.whl | head -c 8)
+      SNAP_VERSION="snap-${ver_without_next}+${WHEEL_SHA_SHORT}"
       craftctl set version="$SNAP_VERSION"
     stage-packages:
       - python3-wxgtk4.0
