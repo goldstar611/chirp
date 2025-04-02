@@ -48,8 +48,7 @@ parts:
       curl -H "User-Agent: goldstar611" -o ${SNAPCRAFT_PART_SRC}/chirp-${ver_without_next}-py3-none-any.whl https://archive.chirpmyradio.com/chirp_next/${ver_with_next}/chirp-${ver_without_next}-py3-none-any.whl
       pip install --no-input --verbose ${SNAPCRAFT_PART_SRC}/chirp-${ver_without_next}-py3-none-any.whl
       # Fix icon
-      find / -type f -name chirp.desktop
-      sed -i 's,Icon=chirp,Icon=${SNAP}/root/.local/lib/python3.10/site-packages/chirp/share/chirp.svg,g' ${SNAPCRAFT_PART_BUILD}/chirp-snap/chirp/share/chirp.desktop
+      find / -type f -name chirp.desktop -exec sed -i 's,Icon=chirp,Icon=${SNAP}/root/.local/lib/python3.10/site-packages/chirp/share/chirp.svg,g' {} \;
       # snap version cannot be longer than 32 characters
       TARBALL_SHA_SHORT=$(sha1sum ${SNAPCRAFT_PART_SRC}/chirp-${ver_without_next}-py3-none-any.whl | head -c 8)
       SNAP_VERSION="snap-${ver_with_next}+${TARBALL_SHA_SHORT}"
