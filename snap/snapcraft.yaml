@@ -49,10 +49,10 @@ parts:
       pip install --no-input --verbose ${SNAPCRAFT_PART_SRC}/chirp-${ver_without_next}-py3-none-any.whl
       # Fix icon
       find / -type f -name chirp.desktop
-      sed -i 's,Icon=chirp,Icon=${SNAP}/lib/python3.10/site-packages/chirp/share/chirp.svg,g' ${SNAPCRAFT_PART_SRC}/chirp/share/chirp.desktop
+      sed -i 's,Icon=chirp,Icon=${SNAP}/root/.local/lib/python3.10/site-packages/chirp/share/chirp.svg,g' ${SNAPCRAFT_PART_SRC}/chirp-snap/chirp/share/chirp.desktop
       # snap version cannot be longer than 32 characters
-      TARBALL_SHA_SHORT=$(sha1sum ${SNAPCRAFT_PART_SRC}/chirp-src.tar.gz | head -c 8)
-      SNAP_VERSION="snap-$(date +%Y%m%d)+${TARBALL_SHA_SHORT}"
+      TARBALL_SHA_SHORT=$(sha1sum ${SNAPCRAFT_PART_SRC}/chirp-${ver_without_next}-py3-none-any.whl | head -c 8)
+      SNAP_VERSION="snap-${ver_with_next}+${TARBALL_SHA_SHORT}"
       craftctl set version="$SNAP_VERSION"
     stage-packages:
       - python3-wxgtk4.0
