@@ -21,7 +21,7 @@ environment:
 
 apps:
   chirp:
-    command: bin/chirp
+    command: bin/bash
     #desktop: lib/python3.10/site-packages/chirp/share/chirp.desktop
     extensions:
       # WARNING: gnome extension is incompatible with python apps.
@@ -55,6 +55,7 @@ parts:
       craftctl set version="$SNAP_VERSION"
     stage-packages:
       - python3-wxgtk4.0
+      - bash
     stage:
       # WORKAROUND: Skip venv from python plugin
       - -bin/activate
