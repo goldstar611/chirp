@@ -1,0 +1,28 @@
+name: Synchronize Fork
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  # Allows Dan to trigger synchronization,
+  # which then triggers snaps to build
+  repository_dispatch:
+    types: dan-says-build
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Merge kk7ds
+        run: |
+          git config --global user.name 'Tony Fuller'
+          git config --global user.email 'goldstar611@hotmail.com'
+          git remote add kk7ds https://github.com/kk7ds/chirp.git
+          git fetch kk7ds
+          # Rebase instead of merge so we don't accumulate extraneous merge commits
+          git rebase kk7ds/master
+          # Force push because we're continuously re-writing the history
+          git push -f origin master
